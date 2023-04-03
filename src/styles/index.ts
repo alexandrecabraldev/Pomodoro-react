@@ -15,8 +15,8 @@ export const {
         colors:{
             white:"#FFF",
             backgroundApp: "#121214",
-            'play/pause': "#42D3FF",
-            'backgroundPlay/pause': "rgba(66, 211, 255, 0.13)",
-        }
+            playPause: "#42D3FF",
+            backgroundPlay: 'rgba(66, 211, 255, 0.13)',
+        },
     }
 });

@@ -2,7 +2,7 @@ import { ContainerApp } from "@/styles/pages/ContainerApp"
 import { ContainerPlayPause } from "@/styles/pages/ContainerPlayPause"
 import Image from "next/image"
 import soundMute from "../../public/mute.png";
-import { useState,useEffect } from "react";
+import { useState } from "react";
 
 export default function Home() {
   
@@ -11,34 +11,45 @@ export default function Home() {
   const [secondsAmount, setSecondsAmount] = useState(0);
   const [resetSuport, setResetSuport] = useState(true);
 
-  useEffect(()=>{
-    
-  },[]);
 
   function Time(timer:number){
     setMinutsAmount(timer);
 
   }
 
+  function reset(){
+    setMinutsAmount(30);
+    setFirstSecondsAmount(0);
+    setSecondsAmount(0);
+  }
+
   function changeTimer(){
 
     if(resetSuport){
-      setFirstSecondsAmount(6);
+
+      setFirstSecondsAmount(5);
+      setSecondsAmount(9);
       setResetSuport(state=>!state);
       setMinutsAmount(state=>state-1);
-    }
-    
-    if(secondsAmount>0){
-      setSecondsAmount(state=>state-1);
-      
+
     }else{
-      setSecondsAmount(9);
-      setFirstSecondsAmount(state=>state-1);
-      
-      if(firstSecondsAmount<0){
-        setFirstSecondsAmount(5);
-      }
-    }  
+    
+      if(secondsAmount>0){
+        setSecondsAmount(state=>state-1);
+        
+      }else{
+        setSecondsAmount(9);
+        setFirstSecondsAmount(state=>state-1);
+
+        if(firstSecondsAmount===0 && secondsAmount===0 && minutsAmount>0){
+          setFirstSecondsAmount(5);
+          setMinutsAmount(state=>state-1);
+
+        }else if(firstSecondsAmount===0 && secondsAmount===0 && minutsAmount===0){
+          //console.log("fim");
+        }
+      } 
+    } 
 
   }
 
@@ -47,7 +58,7 @@ export default function Home() {
 
       <h1>{minutsAmount}:{firstSecondsAmount}{secondsAmount}</h1>
 
-      <ContainerPlayPause onTime={Time} onChangeTimer={changeTimer}/>
+      <ContainerPlayPause onTime={Time} onChangeTimer={changeTimer} minutsAmount={minutsAmount} onReset={reset}/>
 
       <Image src={soundMute} alt=''/>
 

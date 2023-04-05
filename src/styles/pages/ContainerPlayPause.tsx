@@ -27,24 +27,38 @@ const ContainerButtons = styled('div',{
 interface PropsContainerPlayPause{
     onTime: (timer:number)=>void;
     onChangeTimer:()=>void;
+    minutsAmount: number;
+    onReset:()=>void;
 }
 
-export function ContainerPlayPause({onTime, onChangeTimer}:PropsContainerPlayPause){
+export function ContainerPlayPause({onTime, onChangeTimer, minutsAmount, onReset}:PropsContainerPlayPause){
 
     const [changePlay, setChangePlay] = useState(true);
     const [changeWatch, setChangeWatch] = useState(true);
     
     const [effectSuport, setEffectSuport] = useState(0);
-    let minutsAmountSuport: number= 0;
+    const [minutsAmountIndex ,setMinutsAmountIndex]=useState(0);
 
+    let minutsAmountSuport: number= 0;
+    
+    useEffect(()=>{
+        setMinutsAmountIndex(minutsAmount*60);
+    },[])
 
     useEffect(()=>{
-        setTimeout(()=>{
-
+        const timeoutId=setTimeout(()=>{
+         
             if(!changePlay){
+
+                if(minutsAmountIndex===effectSuport){
+                    clearTimeout(timeoutId);
+                    console.log("acabou")
+                }
+
                 onChangeTimer();
-                console.log(effectSuport);
+                //console.log(effectSuport);
                 setEffectSuport(state=>state+1);
+                console.log(minutsAmountIndex);
             }            
             
         },1000);
@@ -75,6 +89,8 @@ export function ContainerPlayPause({onTime, onChangeTimer}:PropsContainerPlayPau
             }
                 
             onTime(minutsAmountSuport);
+        }else{
+            onReset();
         }
 
         console.log(minutsAmountSuport);

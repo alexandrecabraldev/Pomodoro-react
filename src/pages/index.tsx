@@ -3,62 +3,64 @@ import { ContainerPlayPause } from "@/styles/pages/ContainerPlayPause"
 import Image from "next/image"
 import soundMute from "../../public/mute.png";
 import { useState } from "react";
+import Countdown,{zeroPad,CountdownRenderProps} from "react-countdown";
+import { useRef,MutableRefObject } from "react";
+
 
 export default function Home() {
-  
-  const [minutsAmount, setMinutsAmount] = useState(30);
-  const [firstSecondsAmount, setFirstSecondsAmount] = useState(0)
-  const [secondsAmount, setSecondsAmount] = useState(0);
-  const [resetSuport, setResetSuport] = useState(true);
 
+  const clockRef=useRef<Countdown | null>(null);
+  //refatorando todo o app baseado em segundos
+
+  const INITIAL_VALUE= 1 * 60000; //inicia em 30 min e multiplica por 60.000 miliseconds para pegar quantidade de minutos
+
+  const [secondsAmount, setSecondsAmount] = useState(INITIAL_VALUE);
+
+  // const minuts = Math.floor(secondsAmount/60);
+  // const seconds = secondsAmount % 60;
 
   function Time(timer:number){
-    setMinutsAmount(timer);
+    setSecondsAmount(timer *60000);
+  }
+
+  function handleClickPlayPause(){
+    
+    if(clockRef.current?.isStopped()){     
+      clockRef.current.start();
+      return;
+    }
+
+    if(clockRef.current?.isPaused()){
+      clockRef.current.start();
+      return;
+    }
+    clockRef.current?.pause();
 
   }
 
   function reset(){
-    setMinutsAmount(30);
-    setFirstSecondsAmount(0);
-    setSecondsAmount(0);
+    setSecondsAmount(30 * INITIAL_VALUE);
   }
 
-  function changeTimer(){
-
-    if(resetSuport){
-
-      setFirstSecondsAmount(5);
-      setSecondsAmount(9);
-      setResetSuport(state=>!state);
-      setMinutsAmount(state=>state-1);
-
-    }else{
-    
-      if(secondsAmount>0){
-        setSecondsAmount(state=>state-1);
-        
-      }else{
-        setSecondsAmount(9);
-        setFirstSecondsAmount(state=>state-1);
-
-        if(firstSecondsAmount===0 && secondsAmount===0 && minutsAmount>0){
-          setFirstSecondsAmount(5);
-          setMinutsAmount(state=>state-1);
-
-        }else if(firstSecondsAmount===0 && secondsAmount===0 && minutsAmount===0){
-          //console.log("fim");
-        }
-      } 
-    } 
-
+  function render({minutes,seconds}:CountdownRenderProps){
+    return (
+      <h1>{zeroPad(minutes)}:{zeroPad(seconds)}</h1>
+    );
   }
 
   return (
     <ContainerApp>
 
-      <h1>{minutsAmount}:{firstSecondsAmount}{secondsAmount}</h1>
+      {/* <h1>{String(minuts).padStart(2, "0")}:{String(seconds).padStart(2,"0")}</h1> */}
+      <Countdown 
+        date={Date.now() +secondsAmount}
+        intervalDelay={1000}
+        autoStart={false}
+        ref={clockRef}
+        renderer={render}
+      />
 
-      <ContainerPlayPause onTime={Time} onChangeTimer={changeTimer} minutsAmount={minutsAmount} onReset={reset}/>
+      <ContainerPlayPause onTime={Time} onReset={reset} handleClickPlayPause={handleClickPlayPause}/>
 
       <Image src={soundMute} alt=''/>
 

@@ -26,10 +26,11 @@ interface PropsContainerPlayPause{
     onTime: (timer:number)=>void;
     onReset:()=>void;
     handleClickPlayPause:()=>void;
+    handleClickWatch:()=>void;
 }
 
-export function ContainerPlayPause({onTime, onReset, handleClickPlayPause}:PropsContainerPlayPause){
-    
+export function ContainerPlayPause({onTime, onReset, handleClickPlayPause, handleClickWatch}:PropsContainerPlayPause){
+
 
     const [isPlayEnable, setIsPlayEnable] = useState(false);
     const [isWatchPressed, setIsWatchPressed] = useState(false);
@@ -39,21 +40,18 @@ export function ContainerPlayPause({onTime, onReset, handleClickPlayPause}:Props
 
     function handleClickPlay(){
 
-        let ifPlayEnable=false;
-
         setIsPlayEnable(state=>!state);
-        ifPlayEnable= !isPlayEnable;
-        
-        handleClickPlayPause();
 
-        if(ifPlayEnable){
-            setIsWatchPressed(true);
-        }
+        setIsWatchPressed(true);
+
+        handleClickPlayPause();
     }
 
-    function handleClickWatch(){
+    function handleClickWatchStop(){
 
-        if(!isWatchPressed){
+        let ifWatchPressed = !isWatchPressed;
+        
+        if(ifWatchPressed){
 
             while(minutsAmountSuport<=0 || minutsAmountSuport>60 || isNaN(minutsAmountSuport)){
 
@@ -73,7 +71,7 @@ export function ContainerPlayPause({onTime, onReset, handleClickPlayPause}:Props
 
         setIsWatchPressed(false);
         setIsPlayEnable(false);
-        handleClickPlayPause();
+        handleClickWatch();
     }
 
     return(
@@ -83,7 +81,7 @@ export function ContainerPlayPause({onTime, onReset, handleClickPlayPause}:Props
             }
 
             {
-                isWatchPressed ? <Image src={stop} alt='' onClick={handleClickWatch}/> : <Image src={watch} alt='' onClick={handleClickWatch}/>
+                isWatchPressed ? <Image src={stop} alt='' onClick={handleClickWatchStop}/> : <Image src={watch} alt='' onClick={handleClickWatchStop}/>
             }
 
         </ContainerButtons>

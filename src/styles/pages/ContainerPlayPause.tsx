@@ -23,13 +23,13 @@ const ContainerButtons = styled('div',{
 })
 
 interface PropsContainerPlayPause{
-    onTime: (timer:number)=>void;
+    onSetTime: (timer:number)=>void;
     onReset:()=>void;
-    handleClickPlayPause:()=>void;
-    handleClickWatch:()=>void;
+    onHandleClickPlayPause:()=>void;
+    onHandleClickWatch:()=>void;
 }
 
-export function ContainerPlayPause({onTime, onReset, handleClickPlayPause, handleClickWatch}:PropsContainerPlayPause){
+export function ContainerPlayPause({onSetTime, onReset, onHandleClickPlayPause, onHandleClickWatch}:PropsContainerPlayPause){
 
 
     const [isPlayEnable, setIsPlayEnable] = useState(false);
@@ -44,7 +44,7 @@ export function ContainerPlayPause({onTime, onReset, handleClickPlayPause, handl
 
         setIsWatchPressed(true);
 
-        handleClickPlayPause();
+        onHandleClickPlayPause();
     }
 
     function handleClickWatchStop(){
@@ -62,16 +62,15 @@ export function ContainerPlayPause({onTime, onReset, handleClickPlayPause, handl
                 }
             }
 
-            onTime(minutsAmountSuport);
+            onSetTime(minutsAmountSuport);
         }else{
             onReset();
-            setIsWatchPressed(true);
-            handleClickPlayPause();
+            onHandleClickPlayPause();
         }
 
         setIsWatchPressed(false);
         setIsPlayEnable(false);
-        handleClickWatch();
+        onHandleClickWatch();
     }
 
     return(

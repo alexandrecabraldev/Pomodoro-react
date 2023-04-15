@@ -2,6 +2,7 @@ import { ContainerApp } from "@/styles/pages/ContainerApp"
 import { ContainerPlayPause } from "@/styles/pages/ContainerPlayPause"
 import Image from "next/image"
 import soundMute from "../../public/mute.png";
+import sound from "../../public/sound.png";
 import { useState,useRef } from "react";
 import Countdown,{zeroPad,CountdownRenderProps} from "react-countdown";
 
@@ -9,19 +10,13 @@ import Countdown,{zeroPad,CountdownRenderProps} from "react-countdown";
 export default function Home() {
 
   const clockRef=useRef<Countdown | null>(null);
-  //refatorando todo o app baseado em segundos
-
-  const INITIAL_VALUE= 30 * 60000; //inicia em 30 min e multiplica por 60.000 miliseconds para pegar quantidade de minutos
+  const INITIAL_VALUE= 30 * 60000; //inicia em 30 min e multiplica por 60.000 miliseconds para pegar quantidade de minutos em segundos
 
   const [secondsAmount, setSecondsAmount] = useState(INITIAL_VALUE);
-  
+  const [ClickButtonSound,setClickButtonSound]=useState(false);
 
-  // const minuts = Math.floor(secondsAmount/60);
-  // const seconds = secondsAmount % 60;
 
-  
-
-  function Time(timer:number){
+  function setTime(timer:number){
 
     setSecondsAmount(timer *60000);
 
@@ -52,6 +47,9 @@ export default function Home() {
     );
   }
 
+  function clickSoundButton(){
+    setClickButtonSound(state=>!state);
+  }
 
   return (
     <ContainerApp>
@@ -62,14 +60,12 @@ export default function Home() {
         date={Date.now() +secondsAmount}
         intervalDelay={1000}
         autoStart={false}
-        renderer={render}
-        //controlled={true}
-        
+        renderer={render}   
       />
 
-      <ContainerPlayPause onTime={Time} onReset={reset} handleClickPlayPause={handleClickPlayPause} handleClickWatch={handleClickWatch}/>
+      <ContainerPlayPause onSetTime={setTime} onReset={reset} onHandleClickPlayPause={handleClickPlayPause} onHandleClickWatch={handleClickWatch}/>
 
-      <Image src={soundMute} alt=''/>
+      {ClickButtonSound ?<Image src={sound} alt='' onClick={clickSoundButton}/>: <Image src={soundMute} alt='' onClick={clickSoundButton}/>}
 
     </ContainerApp>
   )
